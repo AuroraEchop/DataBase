@@ -17,8 +17,8 @@ interface dish {
   BuiltYear:string
 }
 interface Category {
-  id: number
-  name: string
+  ShipId: number
+  shipName: string
 }
 // interface dish {
 //   id: number
@@ -111,10 +111,10 @@ const handleSelectionChange = (val: dish[]) => {
 const router = useRouter()
 const to_add_update = (row?: any) => {
   console.log('看有没有传过来，来判断要add还是update', row)
-  if (row && row.id) {
+  if (row && row.ShipId) {
     router.push({
       path: '/dish/add',
-      query: { id: row.id }
+      query: { id: row.ShipId }
     })
   } else {
     router.push('/dish/add')
@@ -125,7 +125,7 @@ const to_add_update = (row?: any) => {
 const change_btn = async (row: any) => {
   console.log('要修改的行数据')
   console.log(row)
-  await updateDishStatusAPI(row.id)
+  await updateDishStatusAPI(row.ShipId)
   // 修改后刷新页面，更新数据
   showPageList()
   ElMessage({
@@ -159,7 +159,7 @@ const deleteBatch = (row?: any) => {
           return
         }
         // 拿到当前 multiSelection.value 的所有id，然后调用批量删除接口
-        let ids: any = []
+        let ids: any = [] 
         multiSelection.value.map(item => {
           ids.push(item.ShipId)
         })
@@ -171,8 +171,8 @@ const deleteBatch = (row?: any) => {
       // 2. 传入行数据，单个删除
       else {
         console.log('id包装成数组，然后调用批量删除接口')
-        console.log(row.id)
-        let res = await deleteDishesAPI(row.id)
+        console.log(row.ShipId)
+        let res = await deleteDishesAPI(row.ShipId)
         if (res.data.code != 0) return
       }
       // 删除后刷新页面，更新数据
@@ -196,7 +196,7 @@ const deleteBatch = (row?: any) => {
     <div class="horizontal">
       <el-input size="large" class="input" v-model="pageData.name" placeholder="请输入菜品名" />
       <el-select size="large" class="input" clearable v-model="pageData.categoryId" placeholder="选择分类类型">
-        <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id" />
+        <el-option v-for="item in categoryList" :key="item.ShipId" :label="item.shipName" :value="item.ShipId" />
       </el-select>
       <el-select class="input" clearable v-model="pageData.status" placeholder="选择菜品状态" size="large">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
@@ -211,7 +211,7 @@ const deleteBatch = (row?: any) => {
     </div>
     <el-table class="table_box" ref="multiTableRef" :data="dishList" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />
-      <!-- <el-table-column prop="id" label="id" /> -->
+      <!-- <el-table-column prop="ShipId" label="ShipId" /> -->
       <el-table-column prop="name" label="菜名" align="center" />
       <el-table-column prop="pic" label="图片" align="center">
         <template #default="scope">
@@ -232,7 +232,7 @@ const deleteBatch = (row?: any) => {
         <!-- scope 的父组件是 el-table -->
         <template #default="scope">
           <!-- 遍历categoryList，找到categoryId对应的name   ?.防止找不到对应关系而报错 -->
-          {{ categoryList.find(item => item.id === scope.row.categoryId)?.name }}
+          {{ categoryList.find(item => item.ShipId === scope.row.categoryId)?.shipName }}
         </template>
       </el-table-column>
       <el-table-column prop="updateTime" label="上次操作时间" width="180px" align="center" />
