@@ -9,19 +9,31 @@ import { useRouter } from 'vue-router'
 // ------ .d.ts 属性类型接口 ------
 // 接收到不在接口中定义的属性的数据，ts会报错，但是类型推断错误不会妨碍接收，控制台还是能打印的
 interface dish {
-  id: number
-  name: string
-  pic: string
-  detail: string
-  price: number
-  status: string
-  categoryId: number
-  updateTime: string
+  ShipId: number
+  ShipName: string
+  Imo: string
+  MMSI: string
+  Status: string
+  BuiltYear:string
 }
 interface Category {
   id: number
   name: string
 }
+// interface dish {
+//   id: number
+//   name: string
+//   pic: string
+//   detail: string
+//   price: number
+//   status: string
+//   categoryId: number
+//   updateTime: string
+// }
+// interface Category {
+//   id: number
+//   name: string
+// }
 
 
 // ------ 数据 ------
