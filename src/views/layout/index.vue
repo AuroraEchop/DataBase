@@ -5,7 +5,7 @@ import { useUserInfoStore } from '@/store'
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { fixPwdAPI } from '@/api/employee'
 import { getStatusAPI, fixStatusAPI } from '@/api/shop'
-import { ElNotification } from 'element-plus'
+import { ArrowDown, Expand, Fold } from '@element-plus/icons-vue'
 
 // ------ data ------
 const dialogFormVisible = ref(false)
@@ -202,7 +202,7 @@ const handleClose = () => {
 onMounted(() => {
   document.addEventListener('click', handleClose)
   // getStatus()
-  webSocket()
+  // webSocket()
 })
 
 onBeforeUnmount(() => {
@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
     </el-dialog>
     <el-container>
       <el-header>
-        <img src="../../assets/image/hanye_logo.png" class="logo" />
+        <img src="../../assets/image/hanye_logo.png" class="logo" alt="" />
         <el-icon class="icon1" v-if="isCollapse">
           <Expand @click.stop="isCollapse = !isCollapse" />
         </el-icon>
@@ -493,7 +493,6 @@ a:hover {
   height: 18px;
   font-size: 10px;
   line-height: 16px;
-  font-size: 10px;
   border-radius: 50%;
   padding: 0;
 }
