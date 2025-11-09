@@ -7,39 +7,44 @@ import { useRouter } from 'vue-router'
 import { Plus } from '@element-plus/icons-vue'
 
 // ------ .d.ts 属性类型接口 ------
-// 你的 interface 保持不变
-interface dish {
+// 【修改1】接口重命名并添加新字段
+interface Ship {
   shipId: number
   shipName: string
   imo: string
   mmsi: string
-  status: string
   buildYear: string
+
+  shipType: string
+  country: string
+  owner: string
+  homePort: string
+  status: number
 }
 // 删除了 interface Category
 
 // ------ 数据 ------
 
-// 当前页的菜品列表
-const dishList = ref<dish[]>([])
+// 当前页的船舶列表
+const dishList = ref<Ship[]>([]) // 【修改2】更新引用的接口类型
 // 删除了 categoryList
 // 分页参数
 const pageData = reactive({
-  shipName: '', // 【修改1】name -> shipName
+  shipName: '',
   // categoryId: '', // 【修改2】删除 categoryId
-  status: '',
+  status: '', // 搜索时，Element Plus 的 select v-model 可以处理 '' 和 number 的切换
   page: 1,
   pageSize: 6
 })
 const total = ref(0)
 const options = [
   {
-    value: '1',
-    label: '起售'
+    value: 1, // 【修改3】 '1' -> 1
+    label: '可用'
   },
   {
-    value: '0',
-    label: '停售'
+    value: 0, // 【修改4】 '0' -> 0
+    label: '不可用'
   }
 ]
 
@@ -50,9 +55,9 @@ const options = [
 // 刷新页面数据
 const showPageList = async () => {
   const { data: res } = await getDishPageListAPI(pageData)
-  console.log('菜品列表')
+  console.log('船舶列表')
   console.log(res.data)
-  dishList.value = res.data.list // 【修改4】records -> list
+  dishList.value = res.data.list
   total.value = res.data.total
 }
 // 删除了 init()
@@ -70,9 +75,10 @@ const handleSizeChange = (val: number) => {
 }
 
 const multiTableRef = ref<InstanceType<typeof ElTable>>()
-const multiSelection = ref<dish[]>([])
+const multiSelection = ref<Ship[]>([]) // 【修改5】更新引用的接口类型
 
-const handleSelectionChange = (val: dish[]) => {
+const handleSelectionChange = (val: Ship[]) => {
+  // 【修改6】更新引用的接口类型
   multiSelection.value = val
 }
 
@@ -81,10 +87,9 @@ const router = useRouter()
 const to_add_update = (row?: any) => {
   console.log('看有没有传过来，来判断要add还是update', row)
   if (row && row.shipId) {
-    // 【修改5】ShipId -> shipId
     router.push({
       path: '/dish/add',
-      query: { id: row.shipId } // 【修改6】ShipId -> shipId
+      query: { id: row.shipId }
     })
   } else {
     router.push('/dish/add')
@@ -95,7 +100,7 @@ const to_add_update = (row?: any) => {
 const change_btn = async (row: any) => {
   console.log('要修改的行数据')
   console.log(row)
-  await updateDishStatusAPI(row.shipId) // 【修改7】ShipId -> shipId
+  await updateDishStatusAPI(row.shipId)
   // 修改后刷新页面，更新数据
   await showPageList()
   ElMessage({
@@ -108,7 +113,8 @@ const change_btn = async (row: any) => {
 const deleteBatch = (row?: any) => {
   console.log('要删除的行数据')
   console.log(row)
-  ElMessageBox.confirm('该操作会永久删除菜品，是否继续？', 'Warning', {
+  ElMessageBox.confirm('该操作会永久删除船舶，是否继续？', 'Warning', {
+    // 提示文字修改
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
     type: 'warning'
@@ -119,13 +125,13 @@ const deleteBatch = (row?: any) => {
         if (multiSelection.value.length == 0) {
           ElMessage({
             type: 'warning',
-            message: '请先选择要删除的菜品'
+            message: '请先选择要删除的船舶' // 提示文字修改
           })
           return
         }
         let ids: any = []
         multiSelection.value.map((item) => {
-          ids.push(item.shipId) // (这里你原来就是对的)
+          ids.push(item.shipId)
         })
         ids = ids.join(',')
         console.log('ids', ids)
@@ -135,8 +141,8 @@ const deleteBatch = (row?: any) => {
       // 2. 传入行数据，单个删除
       else {
         console.log('id包装成数组，然后调用批量删除接口')
-        console.log(row.shipId) // 【修改8】ShipId -> shipId
-        let res = await deleteDishesAPI(row.shipId) // 【修改9】ShipId -> shipId
+        console.log(row.shipId)
+        let res = await deleteDishesAPI(row.shipId)
         if (res.data.code != 0) return
       }
       // 删除后刷新页面，更新数据
@@ -163,7 +169,7 @@ const deleteBatch = (row?: any) => {
         class="input"
         clearable
         v-model="pageData.status"
-        placeholder="选择菜品状态"
+        placeholder="选择船舶状态"
         size="large"
       >
         <el-option
@@ -174,13 +180,13 @@ const deleteBatch = (row?: any) => {
         />
       </el-select>
       <el-button size="large" class="btn" round type="success" @click="showPageList()"
-        >查询菜品</el-button
+        >查询船舶</el-button
       >
       <el-button size="large" class="btn" round type="danger" @click="deleteBatch()"
         >批量删除</el-button
       >
       <el-button size="large" class="btn" type="primary" @click="to_add_update()">
-        <el-icon style="font-size: 15px; margin-right: 10px"> <Plus /> </el-icon>添加菜品
+        <el-icon style="font-size: 15px; margin-right: 10px"> <Plus /> </el-icon>添加船舶
       </el-button>
     </div>
     <el-table
@@ -193,14 +199,19 @@ const deleteBatch = (row?: any) => {
       <el-table-column type="selection" width="55" />
 
       <el-table-column prop="shipName" label="船舶名称" align="center" />
+
+      <el-table-column prop="shipType" label="船舶类型" align="center" />
       <el-table-column prop="imo" label="IMO" align="center" />
       <el-table-column prop="mmsi" label="MMSI" align="center" />
-      <el-table-column prop="builtYear" label="建造年份" align="center" />
 
+      <el-table-column prop="country" label="船籍国" align="center" />
+      <el-table-column prop="owner" label="船东" align="center" />
+      <el-table-column prop="homePort" label="船籍港" align="center" />
+      <el-table-column prop="buildYear" label="建造年份" align="center" />
       <el-table-column prop="status" label="状态" align="center">
         <template #default="scope">
-          <el-tag :type="scope.row.status === '1' ? 'success' : 'danger'" round>
-            {{ scope.row.status === '1' ? '启售' : '停售' }}
+          <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'" round>
+            {{ scope.row.status === 1 ? '启售' : '停售' }}
           </el-tag>
         </template>
       </el-table-column>
@@ -211,10 +222,10 @@ const deleteBatch = (row?: any) => {
           <el-button
             @click="change_btn(scope.row)"
             plain
-            :type="scope.row.status === '1' ? 'danger' : 'primary'"
+            :type="scope.row.status === 1 ? 'danger' : 'primary'"
           >
-            {{ scope.row.status === '1' ? '停售' : '起售' }}</el-button
-          >
+            {{ scope.row.status === 1 ? '停售' : '起售' }}
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>
