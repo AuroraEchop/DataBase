@@ -78,61 +78,6 @@ const registerFn = async () => {
 <template>
   <!-- 注册页面的整体盒子 -->
   <div class="background">
-    <!-- 下雨效果 -->
-    <div class="rain">
-      <span style="--i:64;"></span>
-      <span style="--i:33;"></span>
-      <span style="--i:21;"></span>
-      <span style="--i:95;"></span>
-      <span style="--i:42;"></span>
-      <span style="--i:17;"></span>
-      <span style="--i:88;"></span>
-      <span style="--i:50;"></span>
-      <span style="--i:10;"></span>
-      <span style="--i:77;"></span>
-      <span style="--i:3;"></span>
-      <span style="--i:29;"></span>
-      <span style="--i:72;"></span>
-      <span style="--i:5;"></span>
-      <span style="--i:90;"></span>
-      <span style="--i:49;"></span>
-      <span style="--i:14;"></span>
-      <span style="--i:61;"></span>
-      <span style="--i:38;"></span>
-      <span style="--i:81;"></span>
-      <span style="--i:64;"></span>
-      <span style="--i:33;"></span>
-      <span style="--i:21;"></span>
-      <span style="--i:95;"></span>
-      <span style="--i:42;"></span>
-      <span style="--i:17;"></span>
-      <span style="--i:88;"></span>
-      <span style="--i:50;"></span>
-      <span style="--i:10;"></span>
-      <span style="--i:77;"></span>
-      <span style="--i:3;"></span>
-      <span style="--i:29;"></span>
-      <span style="--i:72;"></span>
-      <span style="--i:5;"></span>
-      <span style="--i:90;"></span>
-      <span style="--i:49;"></span>
-      <span style="--i:14;"></span>
-      <span style="--i:61;"></span>
-      <span style="--i:38;"></span>
-      <span style="--i:81;"></span>
-      <span style="--i:21;"></span>
-      <span style="--i:95;"></span>
-      <span style="--i:42;"></span>
-      <span style="--i:17;"></span>
-      <span style="--i:88;"></span>
-      <span style="--i:50;"></span>
-      <span style="--i:10;"></span>
-      <span style="--i:77;"></span>
-      <span style="--i:3;"></span>
-      <span style="--i:29;"></span>
-      <span style="--i:14;"></span>
-      <span style="--i:61;"></span>
-    </div>
     <!-- 注册的盒子 -->
     <div class="reg-box">
       <!-- 标题“后台管理系统(图片)”的盒子 -->
@@ -173,7 +118,7 @@ body {
   width: 100%;
   height: 100vh;
   background-size: cover;
-  background-image: url('../../assets/image/reg.jpg');
+  background-image: url('../../assets/image/ship.jpeg');
   overflow: hidden; // 防止页面滚动条闪动
 }
 
@@ -189,37 +134,6 @@ body {
   z-index: 1;
   /* 确保伪元素在背景图之上 */
 }
-
-.rain {
-  position: relative;
-  display: flex;
-}
-
-.rain span {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  background-color: #eee;
-  margin: 0 4px;
-  border-radius: 50%;
-  box-shadow: 0 0 10px 5px rgba(238, 238, 238, 0.5),
-    /* 微调颜色和透明度 */
-    0 0 30px 15px rgba(238, 238, 238, 0.3),
-    /* 模糊半径和扩散范围 */
-    0 0 50px 30px rgba(221, 221, 221, 0.2);
-  animation: animate 15s linear infinite;
-  animation-duration: calc(200s / var(--i));
-}
-
-.rain span:nth-child(even) {
-  background: #ff8800;
-  /* 橙色调 */
-  box-shadow: 0 0 10px 5px rgba(255, 150, 50, 0.5),
-    /* 颜色和透明度 */
-    0 0 30px 15px rgba(200, 100, 50, 0.3),
-    0 0 50px 30px rgba(200, 50, 50, 0.1);
-}
-
 
 @keyframes animate {
   0% {
