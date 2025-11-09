@@ -30,22 +30,22 @@ const menuList = [
     icon: 'collection',
   },
   {
-    title: '分类管理（用户）',
+    title: '分类管理（租赁）',
     path: '/category',
     icon: 'postcard',
   },
   {
-    title: '套餐管理（船舶）',
+    title: '套餐管理（航程）',
     path: '/setmeal',
     icon: 'user',
   },
   {
-    title: '菜品管理（航程）',
+    title: '菜品管理（船舶）',
     path: '/dish',
     icon: 'dish',
   },
   {
-    title: '员工管理（租赁流程）',
+    title: '员工管理（用户）',
     path: '/employee',
     icon: 'setting',
   },
