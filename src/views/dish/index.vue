@@ -161,7 +161,7 @@ const deleteBatch = (row?: any) => {
         // 拿到当前 multiSelection.value 的所有id，然后调用批量删除接口
         let ids: any = []
         multiSelection.value.map(item => {
-          ids.push(item.id)
+          ids.push(item.ShipId)
         })
         ids = ids.join(',')
         console.log('ids', ids)

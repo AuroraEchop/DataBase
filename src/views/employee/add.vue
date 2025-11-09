@@ -6,71 +6,77 @@ import { ElMessage } from 'element-plus'
 
 // ------ 数据 ------
 const formLabelWidth = '60px'
+// const form = reactive({
+//   id: 0,
+//   name: '',
+//   account: '',
+//   password: '',
+//   phone: '',
+//   age: '',
+//   gender: '',
+//   pic: '',
+// })
 const form = reactive({
-  id: 0,
-  name: '',
-  account: '',
-  password: '',
-  phone: '',
-  age: '',
-  gender: '',
-  pic: '',
+  userId: 0,
+  userName: '',
+  passWord: '',
+  pic: ''
 })
-const genders = [
-  {
-    value: 1,
-    label: '男',
-  },
-  {
-    value: 0,
-    label: '女',
-  }
-]
+// const genders = [
+//   {
+//     value: 1,
+//     label: '男',
+//   },
+//   {
+//     value: 0,
+//     label: '女',
+//   }
+// ]
 const inputRef1 = ref<HTMLInputElement | null>(null)
 const addRef = ref()
 
 // 表单校验
-const checkAge = (rule: any, value: string, callback: (error?: Error) => void) => {
-  if (value === '' || value === undefined) {
-    callback(new Error('请输入年龄'));
-  } else if (!/^\d+$/.test(value)) {
-    callback(new Error('年龄必须为数字'));
-  } else {
-    const age = parseInt(value);
-    if (age < 3) {
-      callback(new Error('年龄不能小于3岁'));
-    } else if (age > 99) {
-      callback(new Error('年龄不能大于99岁'));
-    } else {
-      callback();
-    }
-  }
-}
+// const checkAge = (rule: any, value: string, callback: (error?: Error) => void) => {
+//   if (value === '' || value === undefined) {
+//     callback(new Error('请输入年龄'));
+//   } else if (!/^\d+$/.test(value)) {
+//     callback(new Error('年龄必须为数字'));
+//   } else {
+//     const age = parseInt(value);
+//     if (age < 3) {
+//       callback(new Error('年龄不能小于3岁'));
+//     } else if (age > 99) {
+//       callback(new Error('年龄不能大于99岁'));
+//     } else {
+//       callback();
+//     }
+//   }
+// }
 const rules = {
-  name: [
+  userName: [
     { required: true, trigger: 'blur', message: '不能为空' },
     { min: 2, message: '姓名长度不能少于2个字符', trigger: 'blur' },
     { max: 20, message: '姓名长度不能超过20个字符', trigger: 'blur' },
   ],
-  account: [
-    { required: true, trigger: 'blur', message: '不能为空' },
-    { pattern: /^[a-zA-Z0-9]{1,10}$/, message: '用户名必须是1-10的字母数字', trigger: 'blur' }
-  ],
-  password: [
+  // account: [
+  //   { required: true, trigger: 'blur', message: '不能为空' },
+  //   { pattern: /^[a-zA-Z0-9]{1,10}$/, message: '用户名必须是1-10的字母数字', trigger: 'blur' }
+  // ],
+  passWord: [
     { required: true, trigger: 'blur', message: '不能为空' },
     { pattern: /^\S{6,15}$/, message: '密码必须是6-15的非空字符', trigger: 'blur' }
   ],
-  phone: [
-    { required: true, trigger: 'blur', message: '不能为空' },
-    { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
-  ],
-  age: [
-    { required: true, trigger: 'blur', message: '不能为空' },
-    { validator: checkAge, trigger: 'blur' }
-  ],
-  gender: [
-    { required: true, trigger: 'blur', message: '不能为空' },
-  ],
+  // phone: [
+  //   { required: true, trigger: 'blur', message: '不能为空' },
+  //   { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
+  // ],
+  // age: [
+  //   { required: true, trigger: 'blur', message: '不能为空' },
+  //   { validator: checkAge, trigger: 'blur' }
+  // ],
+  // gender: [
+  //   { required: true, trigger: 'blur', message: '不能为空' },
+  // ],
 }
 
 
@@ -159,16 +165,16 @@ init()
   <h1>添加员工页</h1>
   <el-card>
     <el-form :model="form" :rules="rules" ref="addRef">
-      <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
-        <el-input v-model="form.name" autocomplete="off" />
+      <el-form-item label="姓名" :label-width="formLabelWidth" prop="userName">
+        <el-input v-model="form.userName" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="账号" :label-width="formLabelWidth" prop="account">
+      <!-- <el-form-item label="账号" :label-width="formLabelWidth" prop="account">
         <el-input v-model="form.account" autocomplete="off" />
+      </el-form-item> -->
+      <el-form-item label="密码" :label-width="formLabelWidth" prop="passWord">
+        <el-input v-model="form.passWord" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
-        <el-input v-model="form.password" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="电话" :label-width="formLabelWidth" prop="phone">
+      <!-- <el-form-item label="电话" :label-width="formLabelWidth" prop="phone">
         <el-input v-model="form.phone" autocomplete="off" />
       </el-form-item>
       <el-form-item label="年龄" :label-width="formLabelWidth" prop="age">
@@ -178,8 +184,8 @@ init()
         <el-select clearable v-model="form.gender" placeholder="选择分类类型">
           <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <!-- <el-input v-model="form.gender" autocomplete="off" /> -->
-      </el-form-item>
+
+      </el-form-item> -->
       <el-form-item label="头像" :label-width="formLabelWidth" prop="pic">
         <img class="the_img" v-if="!form.pic" src="/src/assets/image/user_default.png" alt="" />
         <img class="the_img" v-else :src="form.pic" alt="" />

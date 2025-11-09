@@ -8,16 +8,21 @@ import { useUserInfoStore } from '@/store'
 
 // ------ .d.ts 属性类型接口 ------
 interface employee {
-  id: number
-  name: string
-  account: string
-  phone: string
-  age: number
-  gender: string
-  pic: string
-  status: string
-  updateTime: string
+  userId: number
+  userName: string
+  passWord: string
 }
+// interface employee {
+//   id: number
+//   name: string
+//   account: string
+//   phone: string
+//   age: number
+//   gender: string
+//   pic: string
+//   status: string
+//   updateTime: string
+// }
 
 // ------ 数据 ------
 let userInfoStore = useUserInfoStore()
