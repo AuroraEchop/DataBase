@@ -4,12 +4,12 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import { useUserInfoStore } from '@/store'
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { fixPwdAPI } from '@/api/employee'
-import { getStatusAPI, fixStatusAPI } from '@/api/shop'
+import { getStatusAPI } from '@/api/shop'
 import { ArrowDown, Expand, Fold } from '@element-plus/icons-vue'
 
 // ------ data ------
 const dialogFormVisible = ref(false)
-const dialogStatusVisible = ref(false)
+ref(false)
 const formLabelWidth = '80px'
 const isCollapse = ref(false)
 
@@ -60,37 +60,6 @@ const pwdRef = ref()
 const status = ref(1)
 const status_active = ref(1) // 单选框绑定的动态值
 
-// 自定义校验规则: 两次密码是否一致
-const samePwd = (rules: any, value: any, callback: any) => {
-  if (value !== form.newPwd) {
-    // 如果验证失败，则调用 回调函数时，指定一个 Error 对象。
-    callback(new Error('两次输入的密码不一致!'))
-  } else {
-    // 如果验证成功，则直接调用 callback 回调函数即可。
-    callback()
-  }
-}
-const rules = {
-  // 表单的规则检验对象
-  oldPwd: [
-    { required: true, message: '请输入原密码', trigger: 'blur' },
-    {
-      pattern: /^[a-zA-Z0-9]{1,10}$/,
-      message: '原密码必须是1-10的大小写字母数字',
-      trigger: 'blur'
-    }
-  ],
-  newPwd: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
-    { pattern: /^\S{6,15}$/, message: '新密码必须是6-15的非空字符', trigger: 'blur' }
-  ],
-  rePwd: [
-    { required: true, message: '请再次输入新密码', trigger: 'blur' },
-    { pattern: /^\S{6,15}$/, message: '新密码必须是6-15的非空字符', trigger: 'blur' },
-    { validator: samePwd, trigger: 'blur' }
-  ]
-}
-
 // ------ method ------
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
@@ -111,13 +80,6 @@ const init = async () => {
 init()
 
 // 关闭修改店铺状态对话框
-const cancelStatus = () => {
-  ElMessage({
-    type: 'info',
-    message: '已取消修改'
-  })
-  dialogStatusVisible.value = false
-}
 // 关闭修改密码对话框
 const cancelForm = () => {
   ElMessage({
@@ -127,19 +89,6 @@ const cancelForm = () => {
   dialogFormVisible.value = false
 }
 // 修改店铺状态
-const fixStatus = async () => {
-  console.log('修改后的店铺状态为')
-  console.log(status_active.value)
-  const { data: res } = await fixStatusAPI(status_active.value)
-  if (res.code != 0) return // 修改失败信息会在相应拦截器中捕获并提示
-  // 修改成功才改变status的值
-  status.value = status_active.value
-  ElMessage({
-    type: 'success',
-    message: '修改成功'
-  })
-  dialogStatusVisible.value = false
-}
 // 修改密码
 const fixPwd = async () => {
   const valid = await pwdRef.value.validate()
@@ -164,7 +113,7 @@ const fixPwd = async () => {
 
 const quitFn = () => {
   // 为了让用户体验更好，来个确认提示框
-  ElMessageBox.confirm('走了，爱是会消失的吗?', '退出登录', {
+  ElMessageBox.confirm('退出登录', {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
     type: 'warning'
@@ -190,10 +139,8 @@ const quitFn = () => {
 // refs
 const websocket = ref<WebSocket | null>(null)
 const shopShow = ref(false)
-
-const audio1 = ref<HTMLAudioElement | null>(null)
-const audio2 = ref<HTMLAudioElement | null>(null)
-
+ref<HTMLAudioElement | null>(null)
+ref<HTMLAudioElement | null>(null)
 const handleClose = () => {
   shopShow.value = false
 }
@@ -214,28 +161,8 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="common-layout">
-    <el-dialog v-model="dialogStatusVisible" title="店铺状态设置" width="500">
-      <el-radio-group v-model="status_active">
-        <el-radio :value="1" size="large"
-          >营业中
-          <span>当前餐厅处于营业状态，自动接收任何订单，可点击打烊进入店铺打烊状态。</span>
-        </el-radio>
-        <el-radio :value="0" size="large"
-          >打烊中
-          <span
-            >当前餐厅处于打烊状态，仅接受营业时间内的预定订单，可点击营业中手动恢复营业状态。</span
-          >
-        </el-radio>
-      </el-radio-group>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="cancelStatus">取消</el-button>
-          <el-button type="primary" @click="fixStatus">确定</el-button>
-        </div>
-      </template>
-    </el-dialog>
     <el-dialog v-model="dialogFormVisible" title="修改密码" width="500">
-      <el-form :model="form" :rules="rules" ref="pwdRef">
+      <el-form :model="form" ref="pwdRef">
         <el-form-item prop="oldPwd" label="原密码" :label-width="formLabelWidth">
           <el-input v-model="form.oldPwd" autocomplete="off" />
         </el-form-item>
@@ -262,15 +189,7 @@ onBeforeUnmount(() => {
         <el-icon class="icon1" v-else>
           <Fold @click.stop="isCollapse = !isCollapse" />
         </el-icon>
-        <div class="status">{{ status == 1 ? '营业中' : '打烊中' }}</div>
-        <div class="rightAudio">
-          <audio ref="audio1" hidden>
-            <source src="../../assets/preview.mp3" type="audio/mp3" />
-          </audio>
-          <audio ref="audio2" hidden>
-            <source src="../../assets/reminder.mp3" type="audio/mp3" />
-          </audio>
-        </div>
+
         <el-dropdown style="float: right">
           <el-button type="primary">
             {{ userInfoStore.userInfo ? userInfoStore.userInfo.account : '未登录' }}
@@ -283,9 +202,6 @@ onBeforeUnmount(() => {
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-button class="status-change" @click="dialogStatusVisible = true"
-          >店铺状态设置</el-button
-        >
       </el-header>
       <el-container class="box1">
         <!-- 左侧导航菜单区域 -->
@@ -314,7 +230,7 @@ onBeforeUnmount(() => {
           <el-main>
             <router-view></router-view>
           </el-main>
-          <el-footer>© 2024.5.21 hanye-take-out Tech and Fun. All rights reserved.</el-footer>
+          <el-footer>©shujukukeshe</el-footer>
         </el-container>
       </el-container>
     </el-container>

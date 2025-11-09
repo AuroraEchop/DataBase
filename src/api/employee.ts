@@ -2,8 +2,8 @@ import request from '@/utils/request' // 引入自定义的axios函数
 
 /**
  * 登录接口（这是JSDoc注释）
- * @param {*} param0 {username: 用户名, password: 密码}
  * @returns Promise对象
+ * @param params
  */
 export const loginAPI = (params: any) => {
   return request({
@@ -16,7 +16,7 @@ export const loginAPI = (params: any) => {
 /**
  * 注册接口
  * @param params 注册的DTO对象
- * @returns 
+ * @returns
  */
 export const registerAPI = (params: any) => {
   console.log(params)
@@ -31,7 +31,7 @@ export const registerAPI = (params: any) => {
 /**
  * 修改密码接口
  * @param params 新旧密码的DTO对象
- * @returns 
+ * @returns
  */
 export const fixPwdAPI = (params: any) => {
   console.log(params)
@@ -46,7 +46,7 @@ export const fixPwdAPI = (params: any) => {
 /**
  * 管理员添加员工
  * @param params 添加员工的DTO对象
- * @returns 
+ * @returns
  */
 export const addEmployeeAPI = (params: any) => {
   return request({
@@ -59,7 +59,7 @@ export const addEmployeeAPI = (params: any) => {
 /**
  * 获取员工分页列表
  * @param params 分页查询DTO
- * @returns 
+ * @returns
  */
 export const getEmployeePageListAPI = (params: any) => {
   console.log(params)
@@ -73,7 +73,7 @@ export const getEmployeePageListAPI = (params: any) => {
 /**
  * 根据id获取员工信息，用于回显
  * @param id 员工id
- * @returns 
+ * @returns
  */
 export const getEmployeeByIdAPI = (id: number) => {
   return request({
@@ -85,7 +85,7 @@ export const getEmployeeByIdAPI = (id: number) => {
 /**
  * 修改员工信息
  * @param params 更新员工信息的DTO对象
- * @returns 
+ * @returns
  */
 export const updateEmployeeAPI = (params: any) => {
   return request({
@@ -97,8 +97,8 @@ export const updateEmployeeAPI = (params: any) => {
 
 /**
  * 修改员工状态
- * @param params 员工id
- * @returns 
+ * @returns
+ * @param id
  */
 export const updateEmployeeStatusAPI = (id: number) => {
   console.log('员工id', id)
@@ -111,7 +111,7 @@ export const updateEmployeeStatusAPI = (id: number) => {
 /**
  * 管理员根据id删除员工
  * @param id 员工id
- * @returns 
+ * @returns
  */
 export const deleteEmployeeAPI = (id: number) => {
   return request({
