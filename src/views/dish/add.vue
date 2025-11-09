@@ -112,7 +112,7 @@ const addFlavor = () => {
   console.log('dishFlavorsData.length  ', dishFlavorsData.length)
   form.dishFlavors.push({ name: '', list: [] }) // JSON.parse(JSON.stringify(form.dishFlavorsData))
   console.log('添加数据倒是改变watch啊！', form.dishFlavors)
-  // getLeftDishFlavors()
+  // getLeftDishFlavors()addSetmealAPI
   count.value++
 }
 const change = () => {
@@ -292,10 +292,10 @@ init()
       </el-form-item>
       <el-form-item label="口味配置:">
         <div class="flavorBox">
-          <span v-if="form.dishFlavors.length == 0" class="addBut" @click="addFlavor"> + 添加口味</span>
+          <span v-if="form.dishFlavors.length == 0" class="addBut" @click="addFlavor"> + 添加类型</span>
           <div v-if="form.dishFlavors.length != 0" class="flavor">
             <div class="title">
-              <span>口味名（3个字内）</span>
+              <span>船舶类型</span>
             </div>
             <div class="cont">
               <div v-for="(item, index) in form.dishFlavors" :key="index" class="items">
