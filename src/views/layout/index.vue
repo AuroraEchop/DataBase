@@ -17,44 +17,44 @@ const menuList = [
   {
     title: '控制台',
     path: '/dashboard',
-    icon: 'pieChart',
+    icon: 'pieChart'
   },
   {
     title: '数据统计',
     path: '/statistics',
-    icon: 'memo',
+    icon: 'memo'
   },
   {
     title: '订单管理',
     path: '/order',
-    icon: 'collection',
+    icon: 'collection'
   },
   {
     title: '分类管理（租赁）',
     path: '/category',
-    icon: 'postcard',
+    icon: 'postcard'
   },
   {
     title: '套餐管理（航程）',
     path: '/setmeal',
-    icon: 'user',
+    icon: 'user'
   },
   {
     title: '菜品管理（船舶）',
     path: '/dish',
-    icon: 'dish',
+    icon: 'dish'
   },
   {
     title: '员工管理（用户）',
     path: '/employee',
-    icon: 'setting',
-  },
+    icon: 'setting'
+  }
 ]
 
 const form = reactive({
   oldPwd: '',
   newPwd: '',
-  rePwd: '',
+  rePwd: ''
 })
 const pwdRef = ref()
 const status = ref(1)
@@ -70,7 +70,8 @@ const samePwd = (rules: any, value: any, callback: any) => {
     callback()
   }
 }
-const rules = { // 表单的规则检验对象
+const rules = {
+  // 表单的规则检验对象
   oldPwd: [
     { required: true, message: '请输入原密码', trigger: 'blur' },
     {
@@ -93,12 +94,12 @@ const rules = { // 表单的规则检验对象
 // ------ method ------
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
-const route = useRoute();
+const route = useRoute()
 // 根据当前路由的路径返回要激活的菜单项
 const getActiveAside = () => {
   console.log('当前路由的路径--------------', route.path)
-  return route.path;
-};
+  return route.path
+}
 
 // 初始化时获取营业状态
 const init = async () => {
@@ -113,7 +114,7 @@ init()
 const cancelStatus = () => {
   ElMessage({
     type: 'info',
-    message: '已取消修改',
+    message: '已取消修改'
   })
   dialogStatusVisible.value = false
 }
@@ -121,7 +122,7 @@ const cancelStatus = () => {
 const cancelForm = () => {
   ElMessage({
     type: 'info',
-    message: '已取消修改',
+    message: '已取消修改'
   })
   dialogFormVisible.value = false
 }
@@ -130,12 +131,12 @@ const fixStatus = async () => {
   console.log('修改后的店铺状态为')
   console.log(status_active.value)
   const { data: res } = await fixStatusAPI(status_active.value)
-  if (res.code != 0) return   // 修改失败信息会在相应拦截器中捕获并提示
+  if (res.code != 0) return // 修改失败信息会在相应拦截器中捕获并提示
   // 修改成功才改变status的值
   status.value = status_active.value
   ElMessage({
     type: 'success',
-    message: '修改成功',
+    message: '修改成功'
   })
   dialogStatusVisible.value = false
 }
@@ -145,15 +146,15 @@ const fixPwd = async () => {
   if (valid) {
     const submitForm = {
       oldPwd: form.oldPwd,
-      newPwd: form.newPwd,
+      newPwd: form.newPwd
     }
     console.log('要提交的表单信息')
     console.log(submitForm)
     const { data: res } = await fixPwdAPI(submitForm)
-    if (res.code != 0) return   // 密码错误信息会在相应拦截器中捕获并提示
+    if (res.code != 0) return // 密码错误信息会在相应拦截器中捕获并提示
     ElMessage({
       type: 'success',
-      message: '修改成功',
+      message: '修改成功'
     })
     dialogFormVisible.value = false
   } else {
@@ -163,19 +164,15 @@ const fixPwd = async () => {
 
 const quitFn = () => {
   // 为了让用户体验更好，来个确认提示框
-  ElMessageBox.confirm(
-    '走了，爱是会消失的吗?',
-    '退出登录',
-    {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
-      type: 'warning',
-    }
-  )
+  ElMessageBox.confirm('走了，爱是会消失的吗?', '退出登录', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning'
+  })
     .then(() => {
       ElMessage({
         type: 'success',
-        message: '退出成功',
+        message: '退出成功'
       })
       // 清除用户信息，包括token
       userInfoStore.userInfo = null
@@ -185,7 +182,7 @@ const quitFn = () => {
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: '已取消退出',
+        message: '已取消退出'
       })
     })
 }
@@ -196,69 +193,6 @@ const shopShow = ref(false)
 
 const audio1 = ref<HTMLAudioElement | null>(null)
 const audio2 = ref<HTMLAudioElement | null>(null)
-
-const webSocket = () => {
-  const clientId = Math.random().toString(36).slice(2)
-  const socketUrl = 'ws://localhost:8081/ws/' + clientId
-  console.log('socketUrl', socketUrl)
-
-  if (typeof WebSocket == 'undefined') {
-    console.log('当前浏览器无法接收实时报警信息，请使用谷歌浏览器！')
-    ElNotification({
-      title: '提示',
-      message: '当前浏览器无法接收实时报警信息，请使用谷歌浏览器！',
-      type: 'warning',
-      duration: 0,
-    })
-  } else {
-    websocket.value = new WebSocket(socketUrl)
-    websocket.value.onopen = () => {
-      console.log('浏览器WebSocket已打开')
-    }
-    websocket.value.onmessage = (msg) => {
-      console.log('接收到的消息', msg)
-      audio1.value && audio1.value.click()
-      // 重置音频，从头开始播放
-      audio1.value!.currentTime = 0
-      audio2.value!.currentTime = 0
-      // 解析服务器通过WebSocket发送的消息
-      const jsonMsg = JSON.parse(msg.data)
-      if (jsonMsg.type === 1) {
-        audio1.value!.play()
-      } else if (jsonMsg.type === 2) {
-        audio2.value!.play()
-      }
-      // 右上角弹窗提示
-      ElNotification({
-        title: jsonMsg.type === 1 ? '待接单' : '催单',
-        message: jsonMsg.type === 1
-          ? `<span>您有1个<span style="color:#419EFF">订单待处理</span>,${jsonMsg.content},请及时接单</span>`
-          : `${jsonMsg.content}<span style='color:#419EFF;cursor: pointer'>去处理</span>`,
-        duration: 0,
-        dangerouslyUseHTMLString: true,
-        onClick: () => {
-          router.push(`/order?orderId=${jsonMsg.orderId}`).catch((err) => {
-            console.log(err)
-          })
-          setTimeout(() => {
-            location.reload()
-          }, 100)
-        },
-      })
-    }
-    websocket.value.onerror = () => {
-      ElNotification({
-        title: '错误',
-        message: '服务器错误，无法接收实时报警信息',
-        type: 'error',
-        duration: 0,
-      })
-    }
-    websocket.value.onclose = () => {
-      console.log('WebSocket已关闭')
-    }
-  }
-}
 
 const handleClose = () => {
   shopShow.value = false
@@ -282,11 +216,15 @@ onBeforeUnmount(() => {
   <div class="common-layout">
     <el-dialog v-model="dialogStatusVisible" title="店铺状态设置" width="500">
       <el-radio-group v-model="status_active">
-        <el-radio :value="1" size="large">营业中
+        <el-radio :value="1" size="large"
+          >营业中
           <span>当前餐厅处于营业状态，自动接收任何订单，可点击打烊进入店铺打烊状态。</span>
         </el-radio>
-        <el-radio :value="0" size="large">打烊中
-          <span>当前餐厅处于打烊状态，仅接受营业时间内的预定订单，可点击营业中手动恢复营业状态。</span>
+        <el-radio :value="0" size="large"
+          >打烊中
+          <span
+            >当前餐厅处于打烊状态，仅接受营业时间内的预定订单，可点击营业中手动恢复营业状态。</span
+          >
         </el-radio>
       </el-radio-group>
       <template #footer>
@@ -324,7 +262,7 @@ onBeforeUnmount(() => {
         <el-icon class="icon1" v-else>
           <Fold @click.stop="isCollapse = !isCollapse" />
         </el-icon>
-        <div class="status">{{ status == 1 ? '营业中' : "打烊中" }}</div>
+        <div class="status">{{ status == 1 ? '营业中' : '打烊中' }}</div>
         <div class="rightAudio">
           <audio ref="audio1" hidden>
             <source src="../../assets/preview.mp3" type="audio/mp3" />
@@ -345,12 +283,21 @@ onBeforeUnmount(() => {
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-button class="status-change" @click="dialogStatusVisible = true">店铺状态设置</el-button>
+        <el-button class="status-change" @click="dialogStatusVisible = true"
+          >店铺状态设置</el-button
+        >
       </el-header>
       <el-container class="box1">
         <!-- 左侧导航菜单区域 -->
-        <el-menu :width="isCollapse ? '640px' : '200px'" :default-active="getActiveAside()" :collapse="isCollapse"
-          background-color="#22aaee" text-color="#fff" unique-opened router>
+        <el-menu
+          :width="isCollapse ? '640px' : '200px'"
+          :default-active="getActiveAside()"
+          :collapse="isCollapse"
+          background-color="#22aaee"
+          text-color="#fff"
+          unique-opened
+          router
+        >
           <!-- 加了router模式，就会在激活导航时以 :index 作为path进行路径跳转（nb!不用自己写路由了!） -->
           <!-- 根据不同情况选择menu-item/submenu进行遍历，所以外层套template遍历，里面组件做判断看是否该次遍历到自己 -->
           <template v-for="item in menuList" :key="item.path">
@@ -484,8 +431,6 @@ a:hover {
 }
 </style>
 
-
-
 <style lang="less">
 .el-dialog {
   border-radius: 2%;
@@ -521,7 +466,7 @@ a:hover {
   }
 
   .el-radio-group {
-    &>.is-checked {
+    & > .is-checked {
       border: 1px solid #00aaff;
     }
   }
